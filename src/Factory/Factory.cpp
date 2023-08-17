@@ -3,27 +3,19 @@
 using namespace std;
 
 
-// 1、创建接口
+// 1、创建产品接口类
 class Shape {
 public:
     virtual ~Shape(){cout<<"Destruct Class Shape"<<endl;}
     virtual void draw()=0;
 };
 
-// 2、创建实现接口的实体类
+// 2、创建产品实体类
 class Circle : public Shape {
 public:
     void draw() override
     {
         cout<<"draw a Circle"<<endl;
-    }
-};
-
-class Square : public Shape {
-public:
-    void draw() override
-    {
-        cout<<"draw a Square"<<endl;
     }
 };
 
@@ -35,7 +27,7 @@ public:
     }
 };
 
-// 3、创建一个工厂，生成基于给定信息的实体类的对象
+// 3、创建工厂类，生成给定信息的实体类的对象
 class ShapeFactory {
 public:
     std::shared_ptr<Shape> getShape(const std::string& shapeType)
@@ -43,10 +35,6 @@ public:
         if(shapeType=="Circle")
         {
             return std::make_shared<Circle>();
-        }
-        else if(shapeType=="Square")
-        {
-            return std::make_shared<Square>();
         }
         else if(shapeType=="Rectangle")
         {
@@ -63,9 +51,7 @@ int main()
     ShapeFactory factory;
     auto shape1 = factory.getShape("Circle");
     shape1->draw();
-    auto shape2 = factory.getShape("Square");
+    auto shape2 = factory.getShape("Rectangle");
     shape2->draw();
-    auto shape3 = factory.getShape("Rectangle");
-    shape3->draw();
     return 0;
 }
