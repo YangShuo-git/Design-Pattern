@@ -14,11 +14,10 @@ public:
     }
 
 private:
-
-    static Singleton m_data;   //静态成员，类内声明
-
     Singleton(){cout<<"Construct Class Singleton!!!"<<endl;}  //构造函数私有化
     ~Singleton(){}
+
+    static Singleton m_data;   //静态成员，类内声明
 };
 
 Singleton Singleton::m_data;  //类外定义

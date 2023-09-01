@@ -3,14 +3,14 @@
 using namespace std;
 
 
-// 1、创建产品接口类
+// 1、抽象产品类
 class Shape {
 public:
     virtual ~Shape(){cout<<"Destruct Class Shape"<<endl;}
     virtual void draw()=0;
 };
 
-// 2、创建产品实体类
+// 2、实体产品类
 class Circle : public Shape {
 public:
     void draw() override
@@ -27,7 +27,7 @@ public:
     }
 };
 
-// 3、创建工厂类，生成给定信息的实体类的对象
+// 3、工厂类，生成给定信息的实体类的对象
 class ShapeFactory {
 public:
     std::shared_ptr<Shape> getShape(const std::string& shapeType)

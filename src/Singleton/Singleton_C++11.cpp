@@ -15,7 +15,6 @@ public:
     static Singleton* getInstance();
 
 private:
-
     Singleton(){cout<<"Construct Class Singleton!!!"<<endl;}
     ~Singleton(){cout<<"Destruct Class Singleton!!!"<<endl;}
 };
@@ -25,9 +24,7 @@ Singleton* Singleton::m_instance;  //类外定义静态变量
 Singleton* Singleton::getInstance()
 {
     static std::once_flag oc;//用于call_once的局部静态变量
-    std::call_once(oc,
-                   [&]()
-                   {
+    std::call_once(oc,[&](){
                        m_instance = new Singleton();
                    });
     return m_instance;
