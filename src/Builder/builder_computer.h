@@ -105,11 +105,11 @@ public:
 };
 
 // 5. 管理者：安排和调度复杂对象的创建过程
-class Manager
+class Director
 {
 public:
-	Manager(AbstractBuilder* builder):m_builder(builder) {}
-	~Manager() {}
+	Director(AbstractBuilder* builder):m_builder(builder) {}
+	~Director() {}
 	
 	AbstractProduct* createComputer(string display, string host, string KeyBoard, string mouse)
 	{
