@@ -2,23 +2,24 @@
 using namespace std;
 /*
  * 代理模式
- * 例子： 假若你有一个工厂开始是生产手机的，但是它现在不想自己生产了，它把自己的东西交给了一家代工厂富士康去生产，那么便有了下面的代码去构建。
+ * 例子： 假若有一个工厂开始是生产手机的，但是它现在不想自己生产了，它把自己的东西交给了一家代工厂富士康去生产，那么便有了下面的代码去构建。
  * Subject抽象主体角色，抽象类或者接口，是一个普通的业务类型定义
  * RealSubject具体主体角色，也叫作被委托角色，被代理角色。业务逻辑的具体执行者
  * Proxy代理主体角色，委托类，代理类。
  */
 
-// Subject接口 统一的抽象接口
+// Subject抽象接口
 class Subject{
 public:
-    virtual void Request() = 0;  //具体代理的任务接口
+    virtual void Request() = 0;  // 代理的任务接口
 };
 
 // Subject接口实现类
 class ConcreteSubject : public Subject {
 public:
-    void Request() override {
-        cout<<"ConcreteSubject"<<endl;
+    void Request() override 
+    {
+        cout<<"Request:ConcreteSubject"<<endl;
     }
 };
 
@@ -41,8 +42,11 @@ private:
 
 int main()
 {
+    // 这个类也可以在proxy类中实现
     Subject* subject = new ConcreteSubject();
+
     Proxy* proxy = new Proxy(subject);
     proxy->Request();     // 利用代理对象来间接访问ConcreteSubject对象
+
     return 0;
 }
