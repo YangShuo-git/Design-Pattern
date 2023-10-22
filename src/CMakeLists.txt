@@ -16,7 +16,8 @@ add_executable(Builder Builder/builder.cpp)
 # 代理模式
 add_executable(Proxy Proxy/proxy.cpp)
 
-
+# 适配器模式
+add_executable(Adapter Adapter/adapter.cpp)
 
 # 生消模式需要pthread
 target_link_libraries(ProducerAndConsumer pthread)
