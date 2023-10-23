@@ -1,29 +1,27 @@
 #include <iostream>
 using namespace std;
-/*
- * 对象适配器
- * 1. 以PS2转USB转化器（适配器）为例
- */
-//PS2接口
+
+// 对象适配器
+// 1. 以PS2转USB转化器（适配器）为例
+// PS2接口
 class PS2{
 public:
     virtual ~PS2(){}
     virtual void isPS2() = 0;
 };
-//USB接口
+// USB接口
 class USB{
 public:
     virtual void idUSB() = 0 ;
 };
-//USB实现
+// USB实现
 class USBer : public USB {
 public:
     void idUSB() override {
         cout<<"This is a USB"<<endl;
     }
 };
-
-//适配器
+// 适配器
 class Adapter : public PS2{
 private:
     USB* usb;
@@ -46,13 +44,13 @@ public:
  * 需要提供一个包装（Wrapper）类Adapter，这个包装类包装了一个Adaptee的实例，从而将客户端
  * 与Adaptee衔接了起来。由于Adapter与Adaptee是委派关系
  */
-//Target接口
+// Target接口
 class Target{
 public:
     virtual void Request()=0;
 };
 
-//Adaptee类
+// Adaptee类
 class Adaptee{
 public:
     void SpecificRequest()
@@ -61,7 +59,7 @@ public:
     }
 };
 
-//Adapter类
+// Adapter类
 class Adapter2 : public Target {
 private:
     Adaptee* adaptee_;
