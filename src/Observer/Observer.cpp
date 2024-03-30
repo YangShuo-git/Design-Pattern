@@ -6,15 +6,19 @@
 
 int main()
 {
-    // 创建被观察者
+    // 创建Subject
     Subject* subject = new Subject();
 
-    // 创建观察者，完成与被观察者的绑定
-    Observer* ob1 = new BinaryObserver(subject);
-    Observer* ob2 = new OctalObserver(subject);
-    Observer* ob3 = new HexaObserver(subject);
+    // 创建Obserer，在构造函数中就订阅了Subject
+    IObserver* ob1 = new OctalObserver(subject);
+    IObserver* ob2 = new BinaryObserver(subject);
+    IObserver* ob3 = new HexaObserver(subject);
 
+    ob2->removeFromList();
+
+    // 保证Subject在设置State时，Observer立马能收到通知
     subject->SetState(8);
+    cout << " " << endl;
     subject->SetState(10);
 
     return 0;
