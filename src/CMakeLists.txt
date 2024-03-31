@@ -1,4 +1,7 @@
 # 观察者模式
+add_executable(WeatherData WeatherData/main.cpp)
+
+# 观察者模式
 add_executable(Observer Observer/Observer.cpp)
 
 # 生产者消费者模式

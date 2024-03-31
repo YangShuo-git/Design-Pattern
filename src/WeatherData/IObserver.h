@@ -3,7 +3,8 @@
 
 class IObserver {
 public:
-    void update() = 0;
-}
+    virtual ~IObserver() = default;
+    virtual void update(float temp, float humidity, float pressure) = 0;
+};
 
 #endif // _IOBSERVER_H_

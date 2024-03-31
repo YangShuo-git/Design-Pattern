@@ -1,10 +1,14 @@
 #ifndef _ISUBJECT_H_
 #define _ISUBJECT_H_
 
+class IObserver;
+
 class ISubject {
 public:
-    virtual void registerObserver() = 0;
-    virtual void removeObserver() = 0;
+    virtual ~ISubject() = default;
+
+    virtual void registerObserver(IObserver*) = 0;
+    virtual void removeObserver(IObserver*) = 0;
     virtual void notiyObservers() = 0;
 };
 
