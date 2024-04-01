@@ -4,7 +4,7 @@
 class IObserver {
 public:
     virtual ~IObserver() = default;
-    virtual void update(float temp, float humidity, float pressure) = 0;
+    virtual void update(float temp, float humi, float press) = 0;
 };
 
 #endif // _IOBSERVER_H_

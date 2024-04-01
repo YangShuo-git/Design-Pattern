@@ -3,43 +3,43 @@
 
 #include "ISubject.h"
 #include "IObserver.h"
-#include <vector>
+#include <list>
+
 
 class WeatherData : public ISubject {
 private:
-    std::vector<IObserver> m_observers;
+    std::list<IObserver*> m_observers;
     float m_temp;
     float m_humi;
     float m_press;
 
 public:
 
-    void registerObserver(IObserver*) override {
-
+    void registerObserver(IObserver* observer) override {
+        m_observers.push_back(observer);
     }
 
-    void removeObserver(IObserver*) override {
-
+    void removeObserver(IObserver* observer) override {
+        m_observers.remove(observer);
     }
 
     void notiyObservers() override {
-
+        for (IObserver* observer : m_observers)
+        {
+            observer->update(m_temp, m_humi, m_press);
+        }
     }
 
-    float getTemperature() {
+    void setMeasurements(float temp, float humi, float press) override {
+        m_temp = temp;
+        m_humi = humi;
+        m_press = press;
 
-    }
-
-    float getHumidity() {
-        
-    }
-
-    float getPressure() {
-        
+        measurementsChanged();
     }
 
     void measurementsChanged() {
-        
+        notiyObservers();
     }
 
 };

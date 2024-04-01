@@ -7,9 +7,11 @@ class ISubject {
 public:
     virtual ~ISubject() = default;
 
-    virtual void registerObserver(IObserver*) = 0;
-    virtual void removeObserver(IObserver*) = 0;
+    virtual void registerObserver(IObserver* observer) = 0;
+    virtual void removeObserver(IObserver* observer) = 0;
     virtual void notiyObservers() = 0;
+
+    virtual void setMeasurements(float temp, float humi, float press) = 0;
 };
 
 #endif // _ISUBJECT_H_

@@ -13,4 +13,4 @@ cd build
 echo "------start to build------"
 cmake ..
 make
-echo "------end to build------"
+echo "------build finished------"
