@@ -1,7 +1,7 @@
 #include "WeatherData.h"
 #include "ConditionsDisplay.h"
 
-// 订阅多个subject, 改为onFunction()
+// 订阅多个subject, 改为onFunction(), 显示版有名字
 
 int main() {
     std::shared_ptr<WeatherData> w = std::make_shared<WeatherData>();
@@ -19,6 +19,10 @@ int main() {
     display2->unSubscribeWeatherData();
 
     w->setMeasurements(1, 2, 3);
+
+    delete display1;
+    delete display2;
+    delete display3;
 
     return 0;
 }

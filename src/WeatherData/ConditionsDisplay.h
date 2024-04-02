@@ -15,6 +15,7 @@ private:
     std::shared_ptr<ISubject> m_weaterData;
 
 public:
+    // 理解move的使用
     ConditionsDisplay(std::shared_ptr<ISubject> w) : 
         m_temp(0.0f), m_humi(0.0f), m_press(0.0f), m_weaterData(std::move(w)) {
 
@@ -28,7 +29,7 @@ public:
     }
 
     void subscribeWeatherData() {
-        m_weaterData->registerObserver(this);
+        m_weaterData->addObserver(this);
     }
 
     void unSubscribeWeatherData() {

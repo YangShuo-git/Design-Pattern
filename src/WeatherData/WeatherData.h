@@ -15,7 +15,7 @@ private:
 
 public:
 
-    void registerObserver(IObserver* observer) override {
+    void addObserver(IObserver* observer) override {
         m_observers.push_back(observer);
     }
 
