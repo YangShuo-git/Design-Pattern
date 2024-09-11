@@ -10,8 +10,8 @@ using namespace std;
 
 class Subject;
 
-// 创建Observer接口类，有一个数据更新接口，并且需要传进一个Subject
-// 为什么要传入一个Subject呢？保证一创建Observer，就把Observer添加进Subject中
+// 创建Observer接口类：构造函数要传入Subject，而且要有数据更新接口
+// 为什么要传入Subject呢？保证一创建Observer，Subject就可以调用addObserver方法
 class IObserver {
 public:
     IObserver(Subject* subject):m_subject(subject){}
@@ -24,14 +24,13 @@ protected:
     Subject* m_subject;
 };
 
-// 创建Subject类（被观察者），必须有一个观察者列表List
+// 创建Subject类（被观察者）：要有观察者列表，有增删通知观察者的接口
 class Subject {
 private:
     list<IObserver*> m_observers;  //观察者
     int m_state;                   //状态
 
 public:
-    // 添加观察者
     void addObserver(IObserver* observer)
     {
         m_observers.push_back(observer);

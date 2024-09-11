@@ -10,7 +10,6 @@ public:
     virtual void addObserver(IObserver* observer) = 0;
     virtual void removeObserver(IObserver* observer) = 0;
     virtual void notiyObservers() = 0;
-
     virtual void setMeasurements(float temp, float humi, float press) = 0;
 };
 

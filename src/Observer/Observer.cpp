@@ -9,7 +9,7 @@ int main()
     // 创建Subject
     Subject* subject = new Subject();
 
-    // 创建Obserer，在构造函数中就订阅了Subject
+    // 创建Observer时，就订阅了Subject
     IObserver* ob1 = new OctalObserver(subject);
     IObserver* ob2 = new BinaryObserver(subject);
     IObserver* ob3 = new HexaObserver(subject);
