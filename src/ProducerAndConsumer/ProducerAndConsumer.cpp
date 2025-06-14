@@ -1,14 +1,13 @@
-// 生产者  ----->   队列（dataBuffer）   ----->  消费者
 /**
  * 解析produceNumber
- * 条件变量 canWrite，它会在条件不满足的情况下使线程进入等待状态，并释放 locker 对 m_mutex 的独占锁。
- * 当其他线程对共享资源进行修改并通知了该条件变量时，当前线程会重新获得 locker 对 m_mutex 的独占锁并检查条件是否满足，如果满足则继续执行，否则继续等待。
+ * 条件变量 canWrite，它会在条件不满足的情况下使线程进入等待状态，并释放locker对m_mutex 的独占锁。
+ * 当其他线程对共享资源进行修改并通知了该条件变量时，当前线程会重新获得locker对m_mutex的独占锁并检查条件是否满足，如果满足则继续执行，否则继续等待。
  * 在等待期间，该线程会释放对m_mutex 的独占锁，以允许其他线程对共享资源进行修改。
- * 当条件满足时，该线程会重新获得 m_mutex 的独占锁，并继续往 dataBuffer 中添加新元素。这样可以避免多个线程同时往共享资源中添加元素导致的数据竞争问题。
+ * 当条件满足时，该线程会重新获得 m_mutex 的独占锁，并继续往 mQueue 中添加新元素。这样可以避免多个线程同时往共享资源中添加元素导致的数据竞争问题。
  * 
  * 问题：
  * 1.生产者线程和消费者线程使用的是同一个互斥锁 mtx，这可能会导致线程之间的竞争和性能瓶颈
- * 2.当生产者线程生产数据的速度非常快时，消费者线程可能无法及时消费数据，即当 number 较大时，导致 dataBuffer 的大小超过 bufferSize，会陷入等待状态
+ * 2.当生产者线程生产数据的速度非常快时，消费者线程可能无法及时消费数据，即当 mNumber 较大时，导致 mQueue 的大小超过 bufferSize，会陷入等待状态
  * 3.使用了 this_thread::sleep_for() 函数来释放 CPU 占用，这种方法并不高效，因为它会使线程进入睡眠状态，从而浪费 CPU 资源。
  * 4.在 conThread() 函数中，消费者线程每消费一个数据就会唤醒一个生产者线程，这可能会导致生产者线程的数量过多，从而浪费线程资源。
  * 
@@ -38,50 +37,45 @@ public:
 
 private:
     mutex m_mutex;
-    condition_variable canRead;     // 条件变量：可以读数据了
-    condition_variable canWrite;    // 条件变量：可以生产数据了
+    condition_variable mCanRead;     // 条件变量：可以读数据了
+    condition_variable mCanWrite;    // 条件变量：可以生产数据了
     
-    const int number = 50;    // 要产生的总数据量
-
-    queue<int> dataBuffer;      // 数据缓存区
-    const int bufferSize = 5;   // 数据缓存区大小
+    const int mNumber = 50;        // 要产生的总数据量
+    queue<int> mQueue;             // 数据缓存区
+    const int mQueueMaxSize = 5;   // 数据缓存区大小
 };
 
-void ProducerAndConsumerDemo::produceNumber()
-{
-    for (int i = 0; i < number; ++i)
-    {
+void ProducerAndConsumerDemo::produceNumber() {
+    for (int i = 0; i < mNumber; ++i) {
         {
             unique_lock<mutex> locker(m_mutex);
-            canWrite.wait(locker, [&]() { return dataBuffer.size() < bufferSize; }); // 队列满了则阻塞（不要生产了）
-            dataBuffer.push(i);
-            cout << "Producer---produce number: " << i << ", bufferSize:" << dataBuffer.size() << endl;
+            mCanWrite.wait(locker, [&]() { return mQueue.size() < mQueueMaxSize; }); // 队列满了则阻塞（为false时阻塞）
+            mQueue.push(i);
+            cout << "Producer---produce mNumber: " << i << ", mQueueMaxSize:" << mQueue.size() << endl;
         }  // 离开作用域，解锁互斥量
 
-        canRead.notify_one();  // 队列有数据了，通知消费者可以消费数据
-        this_thread::sleep_for(chrono::milliseconds(10));  // 释放cpu占用
+        mCanRead.notify_one();  // 已经produce data，通知消费者可以消费数据
+        this_thread::sleep_for(chrono::milliseconds(10));  // 释放cpu占用 为什么呢？
     }
 }
 
-void ProducerAndConsumerDemo::consumeNumber()
-{
-    while (true)
-    {
+void ProducerAndConsumerDemo::consumeNumber() {
+    while (true) {
         {
             unique_lock<mutex> locker(m_mutex);
-            canRead.wait(locker, [&]() {return !dataBuffer.empty(); }); // 队列为空则阻塞，不要再消费了
+            mCanRead.wait(locker, [&]() {return !mQueue.empty(); }); // 队列为空则阻塞（不要再消费了）
            
-            int i = dataBuffer.front();
-            dataBuffer.pop();
-            cout << "Consumer---consume number: " << i << ", bufferSize:" << dataBuffer.size() << endl;
+            int i = mQueue.front();
+            mQueue.pop();
+            cout << "Consumer---consume mNumber: " << i << ", mQueueMaxSize:" << mQueue.size() << endl;
         }
 
-        canWrite.notify_one(); // 队列没有数据了，通知生产者可以生产数据
+        mCanWrite.notify_one(); // 已经consume data，通知生产者可以生产数据
     }
 }
 
-int main()
-{
+int main() {
+    /************************第一阶段***************************/
     ProducerAndConsumerDemo pcDemo;
     
     thread producerThread(&ProducerAndConsumerDemo::consumeNumber, &pcDemo);
@@ -90,6 +84,7 @@ int main()
     producerThread.join();
     consumerThread.join();
 
+    /************************第二阶段***************************/
     // ProAndCon pac;
     
     // thread producerThread(&ProAndCon::produceNumber, &pac);

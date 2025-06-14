@@ -8,7 +8,7 @@ using namespace std;
  */
 class Singleton {
 public:
-    static Singleton& getInstance()   //饿汉模式，单例运行时已经初始化了m_data 每次返回m_data的引用
+    static Singleton* getInstance()   //饿汉模式，单例运行时已经初始化了m_data 每次返回m_data的引用
     {
         return m_data;
     }
@@ -17,13 +17,16 @@ private:
     Singleton(){cout<<"Construct Class Singleton!!!"<<endl;}  //构造函数私有化
     ~Singleton(){}
 
-    static Singleton m_data;   //静态成员，类内声明
+    static Singleton* m_data;   //静态成员，类内声明
 };
 
-Singleton Singleton::m_data;  //类外定义
+Singleton* Singleton::m_data;  //类外定义
 
 
 int main()
 {
-    //Singleton &a = Singleton::getInstance();
+    Singleton* p1 = Singleton::getInstance();
+    Singleton* p2 = Singleton::getInstance();
+    std::cout << "p1: " << hex << p1 << std::endl; 
+    std::cout << "p2: " << hex << p2 << std::endl; 
 }

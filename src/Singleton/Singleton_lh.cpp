@@ -35,7 +35,7 @@ private:
     ~Singleton(){}
 };
 std::mutex Singleton::mu;
-Singleton* Singleton::m_data = nullptr;  //静态成员类外定义
+Singleton* Singleton::m_data = nullptr;  //静态成员类外初始化
 
 /*
 * 双重检查锁定模式(DCLP)
@@ -46,17 +46,15 @@ Singleton* Singleton::m_data = nullptr;  //静态成员类外定义
 */
 Singleton* Singleton::getInstance()
 {
-    if(m_data == nullptr)  //第一次判断m_data是否为空，线程不安全，可能多个线程同时判空
-    {
+    //第一次判断m_data是否为空，
+    if(m_data == nullptr) {
+        //第二次判空，有可能多个线程get会同时判空，所以加锁，保证只有一个线程来初始化Singleton
         std::lock_guard<std::mutex> lock(mu);
-        if(m_data == nullptr) //第二次判空，加互斥锁，线程安全，保证只有一个线程来初始化Singleton
-        {
+        if(m_data == nullptr) {
             m_data = new Singleton();
         }
         return m_data;
-    }
-    else
-    {
+    } else {
         return m_data;
     }
 }
